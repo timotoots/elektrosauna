@@ -56,3 +56,11 @@ cd uDMX-linux
 make  
 sudo cp uDMX /usr/local/bin/  
 ```
+
+## Run the server
+```
+node /opt/elektrosauna/server/server.js
+```
+
+## Go to admin console
+http://elektrosauna.local:3000
