@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Elektrosauna Console</title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+var state = {};
+
+var mapping;
+
+$.getJSON( "device_mapping.json", function(data){
+  	console.log(data)
+
+  	mapping = data;
+
+  	for(key in data){
+  		console.log(data[key]);
+
+  		if(typeof data[key].dmx !== "undefined" || typeof data[key].dim !== "undefined"){
+  			 $("table").append('<tr id="tr_'+ key +'"><td>'+ key +'</td><td> <input class="slider" id="'+ key +'" type="range" min="0" max="100" step="1" value="0"/> </td></tr>');
+  		} else if (typeof data[key].rel !== "undefined") {
+  			 $("table").append('<tr id="tr_'+ key +'"><td>'+ key +'</td><td> <input class="slider" id="'+ key +'" type="checkbox" value="0"/> </td></tr>')
+  		} else {
+  			  $("table").append('<tr id="tr_'+ key +'"><td>'+ key +'</td><td></td></tr>')
+
+  		}
+
+
+  		$('#tr_'+ key).append('<td><input class="currentPercent"></td>');
+		
+		if(data[key].min){
+   			 $('#tr_'+ key).append('<td>'+ data[key].min +'</td>');
+   		} else {
+   			$('#tr_'+ key).append('<td></td>');
+   		}
+
+  		$('#tr_'+ key).append('<td><input class="currentVal"></td>');
+
+
+   		if(data[key].max){
+   			 $('#tr_'+ key).append('<td>'+ data[key].max +'</td>');
+   		} else {
+   			$('#tr_'+ key).append('<td></td>');
+   		}
+ 	
+
+  		// $("table").append('<tr id="tr_'+ key +'"><td>'+ key +'</td><td> <input class="slider" id="'+ key +'" type="range" min="0" max="100" step="1" value="0"/> </td></tr>')
+
+  	} // for
+
+  	$('input[type=range]').on('input', function () {
+		sendAllValues()
+	});
+	$('input[type=checkbox]').on('input', function () {
+		sendAllValues()
+	});
+
+  });
+
+function sendAllValues(){
+
+
+	$(".slider").each(function(key, value) {
+	   // console.log(this.valueAsNumber);
+	   if(this.type=="checkbox" && this.checked){
+	   		state[this.id] = 100;
+	   } else if(this.type=="checkbox" && this.checked==false){
+	   		state[this.id] = 0;
+	   }  else {
+	   		   state[this.id] = this.valueAsNumber;	
+	   }
+
+	   $('#tr_'+ this.id+" .currentPercent").val(state[this.id]);
+
+	   if(mapping[this.id].max){
+
+	   	if(state[this.id]==0){
+	   		var currentVal = 0;
+	   	} else {
+	   		var currentVal =  Math.floor((mapping[this.id].max - mapping[this.id].min)/100 * state[this.id] + mapping[this.id].min);
+
+	   	}
+
+
+	  		   $('#tr_'+ this.id +" .currentVal").val(currentVal);
+
+	   }
+	   
+
+	});
+	console.log(state);
+
+}
+
+$( document ).ready(function() {
+
+
+	$('input[type=range]').on('input', function () {
+		sendAllValues()
+	});
+	$('input[type=checkbox]').on('input', function () {
+		sendAllValues()
+	});
+	
+
+});
+
+function test(){
+
+	$.getJSON( "/change_pin",{ "test":1 }, function(data){
+
+	});
+
+
+}
+
+
+</script>
+<a href="javascript://" onclick="test()">test</a>
+<table border=1>
+	<tr>
+	<td>key</td>
+	<td>change</td>
+	<td>percent</td>
+	<td>min</td>
+	<td>value</td>
+	<td>max</td>
+
+</tr>
+
+</table>
+
+
+</body>
+</html>

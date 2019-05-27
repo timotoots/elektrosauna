@@ -1,0 +1,22 @@
+{
+	"part":{
+		"rel":"1.1",
+		"groups":["lamps"]
+	},
+	"hairdryer":{
+		"dmx": 2,
+		"min":10,
+		"max":125,
+		"side":1,
+		"groups":["motors"]
+	},
+	"mikser":{
+		"dim": 2,
+		"min":30,
+		"max":255,
+		"side":1,
+		"groups":["motors"]
+	}
+
+}
+
