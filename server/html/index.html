@@ -6,45 +6,82 @@
 	<script type="text/javascript" src="jquery.min.js"></script>
 </head>
 <body>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<style type="text/css">
+		
+		.dimmer_dmx{
+			background: green;
+		}
+
+		.dimmer{
+			background: blue;
+		}
+
+		.rel {
+			background: orange;
+		}
+
+			table{
+				width: 100%;
+			}
+
+		.currentPercent, .currentVal{
+			width: 2em;
+		}
+
+		tr{
+			height: 3em;
+		}
+		.titles{
+			font-size:0.5em;
+		}
+
+	</style>
 <script type="text/javascript">
 
 var state = {};
 
 var mapping;
 
-$.getJSON( "device_mapping.json", function(data){
-  	console.log(data)
+$.getJSON( "/get_mapping", function(data){
 
-  	mapping = data;
+  	mapping = {};
 
-  	for(key in data){
-  		console.log(data[key]);
+  	for(i in data){
 
-  		if(typeof data[key].dmx !== "undefined" || typeof data[key].dim !== "undefined"){
-  			 $("table").append('<tr id="tr_'+ key +'"><td>'+ key +'</td><td> <input class="slider" id="'+ key +'" type="range" min="0" max="100" step="1" value="0"/> </td></tr>');
-  		} else if (typeof data[key].rel !== "undefined") {
-  			 $("table").append('<tr id="tr_'+ key +'"><td>'+ key +'</td><td> <input class="slider" id="'+ key +'" type="checkbox" value="0"/> </td></tr>')
-  		} else {
-  			  $("table").append('<tr id="tr_'+ key +'"><td>'+ key +'</td><td></td></tr>')
+  		var uid = data[i].uid;
+  		mapping[uid] = data[i];
 
+  		if( (data[i].interface=="dim" && data[i].dim_id != "" && data[i].dim_id != "x" )  ){
+  			 $("table").append('<tr class="dimmer" id="tr_'+ uid +'"><td>'+ uid +'</td><td> <input class="slider" id="'+ uid +'" type="range" min=0 max=100 step="1" value="0"/> </td></tr>');
+  		} if(  (data[i].interface=="dmx" && data[i].dmx_id != "" && data[i].dmx_id != "x"  )  ){
+  			 $("table").append('<tr class="dimmer_dmx" id="tr_'+ uid +'"><td>'+ uid +'</td><td> <input class="slider" id="'+ uid +'" type="range" min=0 max=100 step="1" value="0"/> </td></tr>');
+  		} else if (data[i].interface=="rel" && data[i].rel_id != "" &&  data[i].rel_id != "x") {
+  			 $("table").append('<tr class="rel"  id="tr_'+ uid +'"><td>'+ uid +'</td><td> <input class="slider" id="'+ uid +'" type="checkbox" value="0"/> </td></tr>')
+  		} else if (data[i].interface=="amp" && data[i].interface=="start" ) {
+  			
+  		}  else {
+  			  $("table").append('<tr id="tr_'+ uid +'"><td>'+ uid +'</td><td></td></tr>')
   		}
 
 
-  		$('#tr_'+ key).append('<td><input class="currentPercent"></td>');
+  		$('#tr_'+ uid).append('<td><input class="currentPercent"></td>');
 		
-		if(data[key].min){
-   			 $('#tr_'+ key).append('<td>'+ data[key].min +'</td>');
+		if(data[i].interface=="dim" || data[i].interface=="dmx"){
+   			 $('#tr_'+ uid).append('<td>'+ data[i].min +'</td>');
    		} else {
-   			$('#tr_'+ key).append('<td></td>');
+   			$('#tr_'+ uid).append('<td></td>');
    		}
 
-  		$('#tr_'+ key).append('<td><input class="currentVal"></td>');
+  		$('#tr_'+ uid).append('<td><input class="currentVal"></td>');
 
 
-   		if(data[key].max){
-   			 $('#tr_'+ key).append('<td>'+ data[key].max +'</td>');
+   		if(data[i].interface=="dim" || data[i].interface=="dmx"){
+   			 $('#tr_'+ uid).append('<td>'+ data[i].max +'</td>');
    		} else {
-   			$('#tr_'+ key).append('<td></td>');
+   			$('#tr_'+ uid).append('<td></td>');
    		}
  	
 
@@ -58,6 +95,8 @@ $.getJSON( "device_mapping.json", function(data){
 	$('input[type=checkbox]').on('input', function () {
 		sendAllValues()
 	});
+
+	sendAllValues();
 
   });
 
@@ -81,18 +120,22 @@ function sendAllValues(){
 	   	if(state[this.id]==0){
 	   		var currentVal = 0;
 	   	} else {
+
 	   		var currentVal =  Math.floor((mapping[this.id].max - mapping[this.id].min)/100 * state[this.id] + mapping[this.id].min);
 
 	   	}
 
-
-	  		   $('#tr_'+ this.id +" .currentVal").val(currentVal);
+	  		$('#tr_'+ this.id +" .currentVal").val(currentVal);
 
 	   }
 	   
 
 	});
 	console.log(state);
+
+		$.getJSON( "/change_all_pins",state, function(data){
+			console.log(data);
+	});
 
 }
 
@@ -105,6 +148,7 @@ $( document ).ready(function() {
 	$('input[type=checkbox]').on('input', function () {
 		sendAllValues()
 	});
+	
 	
 
 });
@@ -122,8 +166,8 @@ function test(){
 </script>
 <a href="javascript://" onclick="test()">test</a>
 <table border=1>
-	<tr>
-	<td>key</td>
+	<tr class="titles">
+	<td>uid</td>
 	<td>change</td>
 	<td>percent</td>
 	<td>min</td>

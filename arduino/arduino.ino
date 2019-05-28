@@ -47,6 +47,34 @@ void loop() {
   while (Serial.available() > 0) {
   
     int type = Serial.parseInt();
+
+    ///////////////////////////////////////////
+
+    if(type==4){
+
+      Serial.println("Type: REL BATCH");
+    
+      for (int i = 0; i < 16; ++i){
+
+        int value = Serial.parseInt();
+        if(value==1){
+          digitalWrite(rels[i],HIGH);
+          Serial.print("1");
+        } else {
+          digitalWrite(rels[i],LOW);
+          Serial.print("0");
+        }
+      
+      }
+
+      if (Serial.read() == '\n') {
+        Serial.println("batch done");
+      }
+
+    ///////////////////////////////////////////
+
+    } else {
+
     int id = Serial.parseInt();
     int value = Serial.parseInt();
     int value2 = Serial.parseInt();
@@ -63,7 +91,7 @@ void loop() {
       // // https://www.reddit.com/r/arduino/comments/6nmprg/reading_data_from_serial_and_parsing_it_into_an/
 
       if(type==1){
-      	Serial.println("Type: REL");
+      	
         id = constrain(id, 0, 15);
         if(value>50){
         	digitalWrite(rels[id],HIGH);
@@ -96,7 +124,11 @@ void loop() {
       Serial.println(value);
        
      }
-    
+
+         } // else
+
+
+
   } // while serial
 
   // delay(2);
