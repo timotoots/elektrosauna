@@ -6,10 +6,10 @@ Elektrosauna
 #include "Dimmer.h"
 
 // Define relay pins
-int rels[16] = {  23,25,27,29,31,33,35,37,   39,41,43,45,47,49,51,53 };
+int rels[24] = {  23,25,27,29,31,33,35,37,   39,41,43,45,47,49,51,53,   A0,A1,A2,A3,A4,A5,A6,A7 };
 
 // Define dimmer pins
-int dims[8] = { 28,26,24,22,   36,34,32,30 }; //  38,40,42,44, 46,48,50,52
+int dims[12] = { 28,26,24,22,   36,34,32,30,  46,48,50,52 }; //   DIM3: 38,40,42,44
 
 float time;
 
@@ -22,23 +22,35 @@ Dimmer dimmers[] = {
   Dimmer(dims[4], DIMMER_RAMP),
   Dimmer(dims[5], DIMMER_RAMP),
   Dimmer(dims[6], DIMMER_RAMP),
-  Dimmer(dims[7], DIMMER_RAMP)
+  Dimmer(dims[7], DIMMER_RAMP),
+  Dimmer(dims[8], DIMMER_RAMP),
+  Dimmer(dims[9], DIMMER_RAMP),
+  Dimmer(dims[10], DIMMER_RAMP),
+  Dimmer(dims[11], DIMMER_RAMP)
 };
 
 
 void setup() {
 
 	// Start dimmers
-	for(int i = 0; i < sizeof(dimmers) / sizeof(Dimmer); i++) {
+	for(int i = 0; i < sizeof(dims); i++) {
 		dimmers[i].begin();
 	}
 
+  // Set rel pins
+  for(int i = 0; i < sizeof(rels); i++) {
+      pinMode(rels[i], OUTPUT);
+  }
+
+
 	shutdown();
+
 
 	// Start serial
 	Serial.begin(115200);
 	delay(500);
 	Serial.println("READY");
+
 }
 
 void loop() {
@@ -52,9 +64,9 @@ void loop() {
 
     if(type==4){
 
-      Serial.println("Type: REL BATCH");
+      Serial.println("Type: REL BATCHER");
     
-      for (int i = 0; i < 16; ++i){
+      for (int i = 0; i < sizeof(rels); ++i){
 
         int value = Serial.parseInt();
         if(value==1){
@@ -74,6 +86,7 @@ void loop() {
     ///////////////////////////////////////////
 
     } else {
+
 
     int id = Serial.parseInt();
     int value = Serial.parseInt();
@@ -103,7 +116,10 @@ void loop() {
       
       } else if(type==2){
       	Serial.println("Type: DIM");
-    	id = constrain(id, 0, 15);
+    	id = constrain(id, 0, 19);
+
+      Serial.println(dims[id]);
+
     	if(value2 == 0){
 
     		time = 1;

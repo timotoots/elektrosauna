@@ -1,19 +1,19 @@
 notes,id,side,panel,interface,dim_id,rel_id,dmx_id,min,max
-,start,all,all,rel,,0,,,
-230v,mikser,front,top,dim,x,,,0,100
+,start,all,all,rel,,7,,,
+230v,0mikser,front,top,dim,0,,,0,100
 katki,manguauto,front,top,-,,,,,
-230v,infrared,front,top,dim,0,,,0,100
-,part,front,top,dmx,,,x,0,30
-,tainamikser,front,top,rel,,x,,,
-500w 2.17a,tolm,front,top,rel,,x,,,
+230v,1infrared,front,top,dim,1,,,0,100
+,part,front,top,katki,,,,,
+,tainamikser,front,top,rel,,13,,,
+500w 2.17a,tolm,front,top,rel,,12,,,
 30vac,telefon,front,top,?,,,,,
-12v,firealarm,front,top,dmx,,,x,0,30
-12v,exit,front,top,dmx,,,x,0,30
+12v,firealarm,front,top,dmx,,,10,60,100
+12v,exit,front,top,dmx,,,8,0,100
 ,minisang,front,top,rel,,x,,,
-,tupsu,front,top,dmx,,,20,38,39
-,led_vasak,front,middle,dmx,,,x,0,30
-,led_parem,front,middle,dmx,,,28,3,28
-12v 1a,raadiolamp,front,middle,dmx,,,x,0,30
+,tupsud,front,top,katki,,,,,
+,led_vasak,front,middle,dmx,,,6,0,6
+,led_parem,front,middle,dmx,,,28,3,35
+12v 1a,raadiolamp,front,middle,dmx,,,3,0,100
 ,vortex,front,middle,rel,,x,,,
 ,aktiiv_vasak,front,bottom,start,,,,,
 ,aktiiv_parem,front,bottom,start,,,,,
@@ -37,23 +37,23 @@ katki,manguauto,front,top,-,,,,,
 ,skoda,right,middle,?,,,,,
 ,lcd,right,bottom,start,,,27,,
 ,taskulamp,right,bottom,dmx,,,x,0,30
-,kalad,left,top,dim,x,,,0,100
+,2kalad,left,top,dim,2,,,0,100
 4ohm,telefon,left,top,amp,,,,,
-,laualed,left,top,dmx,,,x,0,30
-,cd,left,top,dmx,,,x,0,30
+,laualed,left,top,dmx,,,4,3,30
+,cd,left,top,dmx,,,2,15,20
 6ohm,kolar,left,top,amp,,,,,
 DVI,lcd,left,top,start,,,,,
 12v,olympus,left,top,rel,,x,,,
 230v,sang,left,top,rel,,x,,,
 ,fax,left,middle,start,,,,,
-,mommilamp,left,middle,dim,x,,,0,100
-,uksekell,left,middle,dim,x,,,0,100
-,kausslamp,left,middle,dim,x,,,0,100
+,3mommilamp,left,middle,dim,3,,,0,100
+,4uksekell,left,middle,dim,4,,,0,100
+,5kausslamp,left,middle,dim,5,,,0,100
 ,aktiiv,left,middle,start,,,,,
-12v 0.7a,robottolm,left,middle,dmx,,,x,0,30
+12v 0.7a,robottolm,left,middle,dmx,,,5,47,100
 ,aktiiv,left,bottom,start,,,,,
-,taskulamp,left,bottom,dmx,,,x,0,
-40w 230v,suur_vent,left,bottom,dim,x,,,0,100
+,taskulamp,left,bottom,dmx,,,1,0,30
+40w 230v,6suur_vent,left,bottom,dim,6,,,0,100
 12v,grunding,back,top,rel,,x,,,
 ,seat,back,top,rel,,x,,,
 ,aktiiv,back,top,start,,,,,
@@ -61,31 +61,30 @@ DVI,lcd,left,top,start,,,,,
 ,scanner,back,top,start,,,,,
 230v,alarm,back,top,rel,,x,,,
 ,telefon,back,top,?,,,,,
-,kitarr,back,top,dmx,,,x,0,30
-,foon,back,top,dmx,,,x,0,30
+,kitarr,back,top,rel,,x,,0,30
+,foon,back,top,katki,,,,,
 ,sang1,back,middle,rel,,x,,,
 ,sang2,back,middle,rel,,x,,,
 katki,sang_broken,back,middle,?,,,,,
-,sireen,back,middle,dmx,,,x,0,30
-230v,mikser,back,middle,dim,x,,,0,100
+,sireen,back,middle,dmx,,,12,0,30
+230v,7mikser,back,middle,dim,7,,,0,100
 ,automakk,back,bottom,rel,,x,,,
-,uksekell,back,bottom,dim,x,,,0,100
+,8uksekell,back,bottom,dim,8,,,0,100
 ,sang,back,bottom,rel,,x,,,
-,trell,back,bottom,dmx,,,x,0,30
-,foon,back,bottom,dmx,,,x,0,30
-,synt,back,bottom,dmx,,,x,0,30
-,taskulamp,back,bottom,dmx,,,x,0,30
-,massaz,back,bottom,rel,,15,,,
+,trell,back,bottom,rel,,x,,0,30
+,foon,back,bottom,dmx,,,13,19,40
+,synt,back,bottom,?,,,,,
+,taskulamp,back,bottom,dmx,,,14,0,30
+,9massaz,back,bottom,dim,9,,,0,100
 ,printer,back,bottom,start,,,,,
 VGA,lcd,back,bottom,start,,,,,
 ,tolm,top,right,rel,,x,,,
 ,fax,top,right,rel,,x,,,
-,stopled,top,right,dmx,,,x,0,30
+,stopled,top,right,dmx,,,9,0,100
 ,scanner,top,right,start,,,,,
-,vent,top,right,dim,x,,,0,100
-,reflect,top,right,dim,x,,,0,100
+,10vent,top,right,dim,10,,,0,100
+,11reflect,top,right,dim,11,,,0,100
 12v,halogen,top,left,dmx,,,x,0,100
-,sang_philips1,top,left,rel,,x,,,
-,sang_philips2,top,left,rel,,x,,,
-,synt,top,left,rel,,x,,,
+,sangad_philips,top,left,rel,,14,,,
+,synt,top,left,katki,,,,,
 ,reflect,top,left,dim,x,,,0,100

@@ -57,13 +57,13 @@ for(var i=0;i<=30;i++){
 	pins_state.dmx.push(0);
 }
 
-for(var i=0;i<=15;i++){
+for(var i=0;i<=23;i++){
 	pins_state.rel.push(0);
 }
 
 var lastDims = [];
 
-for(var i=0;i<8;i++){
+for(var i=0;i<12;i++){
 	pins_state.dim.push(0);
 	pins_state.dim_time.push(1);
 	lastDims.push(0);
@@ -220,13 +220,13 @@ var lastRelCmd = "";
 
 function changeRel(values){
 
-	if(values.length!=16){
+	if(values.length!=24){
 		console.log("channel number does not match!")
 		return false;
 	}
 
 	var cmd = "4";
-	for(var i=0;i<16 ; i++){
+	for(var i=0;i<24 ; i++){
 
 		cmd = cmd + " " + values[i];
 
@@ -286,7 +286,7 @@ function changeDmx(values){
 		return false;
 	}
 
-	var cmd = "/opt/elektrosaun/uDMX-linux/uDMX 1 ";
+	var cmd = "/usr/local/bin/uDMX 1 ";
 	for(var i=1;i<=30 ; i++){
 		cmd = cmd + " " + values[i];
 	}
