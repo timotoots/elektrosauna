@@ -15,6 +15,12 @@ var request = require('request');
 
 const csv = require('csv-parser');  
 
+// GPIO wiring:16
+
+//    Physical pin 10
+//    BCM pin 15
+//    Wiring Pi pin 16
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Web server
 

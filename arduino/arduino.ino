@@ -40,7 +40,13 @@ void setup() {
   // Set rel pins
   for(int i = 0; i < sizeof(rels); i++) {
       pinMode(rels[i], OUTPUT);
+       if(i>15){
+
+            digitalWrite(rels[i],HIGH);
+          }
   }
+
+
 
 
 	shutdown();
@@ -69,13 +75,28 @@ void loop() {
       for (int i = 0; i < sizeof(rels); ++i){
 
         int value = Serial.parseInt();
-        if(value==1){
-          digitalWrite(rels[i],HIGH);
-          Serial.print("1");
+        if(i>15){
+
+          if(value==1){
+            digitalWrite(rels[i],LOW);
+            Serial.print("1");
+          } else {
+            digitalWrite(rels[i],HIGH);
+            Serial.print("0");
+          }
+
         } else {
-          digitalWrite(rels[i],LOW);
-          Serial.print("0");
+
+            if(value==1){
+            digitalWrite(rels[i],HIGH);
+            Serial.print("1");
+          } else {
+            digitalWrite(rels[i],LOW);
+            Serial.print("0");
+          }
+
         }
+
       
       }
 
