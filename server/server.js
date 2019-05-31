@@ -190,7 +190,7 @@ function test(){
 }
 
 //////////////////////////////////
-
+/*
 function changePin(type, id, value, time = 0){
 
 	if(type!="REL" && type!="DIM"){
@@ -213,7 +213,7 @@ function changePin(type, id, value, time = 0){
 
 
 }
-
+*/
 /////////////////////////////////////////////////
 
 function mapValues(value,in_min, in_max, out_min, out_max) {
@@ -394,7 +394,7 @@ function changeAllPins(state){
 }
 
 //////////////////////////////////
-
+/*
 function writeToSerial(){
 
 	for (var i = 0; i < 16; i++) {
@@ -404,5 +404,5 @@ function writeToSerial(){
 	
 }
 
-
+*/
 //////////////////////////////////

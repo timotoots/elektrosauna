@@ -6,10 +6,10 @@ Elektrosauna
 #include "Dimmer.h"
 
 // Define relay pins
-int rels[24] = {  23,25,27,29,31,33,35,37,   39,41,43,45,47,49,51,53,   A0,A1,A2,A3,A4,A5,A6,A7 };
+int rels[24] = {  23,25,27,29,31,33,35,37,   39,41,43,45,47,49,51,53,   A2,A1,A5,A4,  A3,A0,A6,A7 }; // 16,17,18,19,20,
 
 // Define dimmer pins
-int dims[12] = { 28,26,24,22,   36,34,32,30,  46,48,50,52 }; //   DIM3: 38,40,42,44
+int dims[12] = { 28,26,24,22,   36,34,32,30,  38,40,42,44   }; //   DIM4: 46,48,50,52
 
 float time;
 
@@ -41,12 +41,9 @@ void setup() {
   for(int i = 0; i < sizeof(rels); i++) {
       pinMode(rels[i], OUTPUT);
        if(i>15){
-
             digitalWrite(rels[i],HIGH);
-          }
+         }
   }
-
-
 
 
 	shutdown();
@@ -57,9 +54,15 @@ void setup() {
 	delay(500);
 	Serial.println("READY");
 
+
 }
 
 void loop() {
+
+
+	if(1==2){
+		test();
+	} else {
 
  
   while (Serial.available() > 0) {
@@ -72,32 +75,9 @@ void loop() {
 
       Serial.println("Type: REL BATCHER");
     
-      for (int i = 0; i < sizeof(rels); ++i){
-
+      for (int i = 0; i < 24; ++i){
         int value = Serial.parseInt();
-        if(i>15){
-
-          if(value==1){
-            digitalWrite(rels[i],LOW);
-            Serial.print("1");
-          } else {
-            digitalWrite(rels[i],HIGH);
-            Serial.print("0");
-          }
-
-        } else {
-
-            if(value==1){
-            digitalWrite(rels[i],HIGH);
-            Serial.print("1");
-          } else {
-            digitalWrite(rels[i],LOW);
-            Serial.print("0");
-          }
-
-        }
-
-      
+        changeRel(i,value);
       }
 
       if (Serial.read() == '\n') {
@@ -126,12 +106,10 @@ void loop() {
 
       if(type==1){
       	
+      	Serial.println("Type: REL SOLO");
         id = constrain(id, 0, 15);
-        if(value>50){
-        	digitalWrite(rels[id],HIGH);
-        } else {
-        	digitalWrite(rels[id],LOW);
-        }
+        value = constrain(value, 0, 1);
+        changeRel(id,value);
  
 	  ////////////////////////////////
       
@@ -168,6 +146,8 @@ void loop() {
 
   } // while serial
 
+	} // if test
+
   // delay(2);
 }
 
@@ -178,9 +158,41 @@ void changeDim(int id, int value, int time){
         
 }
 
+////////////////////////////////////////////
+
+void changeRel(int i, int value){
+
+	if(value==1){
+		    Serial.print("changeRel id:");
+            Serial.print(i);
+            Serial.println(" on");
+	} else {
+		    Serial.print("changeRel");
+            Serial.print(i);
+            Serial.println(" off");		
+	}
+
+ 	if(i>15){
+      if(value==1){
+        digitalWrite(rels[i],LOW);
+      } else {
+        digitalWrite(rels[i],HIGH);
+      }
+
+    } else {
+        if(value==1){
+        	digitalWrite(rels[i],HIGH);
+	    } else {
+	        digitalWrite(rels[i],LOW);
+	    }
+    }
+
+
+} // changeRel
+
 
 void shutdown(){
-
+/*
 	for(int i=0 ; i<sizeof(rels) ; i++){
 		digitalWrite(rels[i],LOW);
 	}
@@ -190,11 +202,53 @@ void shutdown(){
 		dimmers[i].set(0);
 	}
 
-  
+  */
+}
+
+void test(){
+
+
+
+ 	//  for(int i=0 ; i<16 ; i++){
+		// Serial.print("pin on:");
+ 	// 	Serial.println(i);
+  //       digitalWrite(rels[i],HIGH);
+  //       delay(3000);
+  //      	Serial.print("pin off:");
+ 	// 	Serial.println(i);
+  //       digitalWrite(rels[i],LOW);
+
+  //   }
+
+    for(int i=16 ; i<16+8 ; i++){
+		Serial.print("pin on:");
+ 		Serial.println(i);
+        digitalWrite(rels[i],LOW);
+        delay(3000);
+       	Serial.print("pin off:");
+ 		Serial.println(i);
+        digitalWrite(rels[i],HIGH);
+
+    }
+	/*
+
+ 	for(int i=0 ; i<4+4+2 ; i++){
+		Serial.print("dim on:");
+ 		Serial.println(i);
+        changeDim(i, 100, 1);
+        delay(3000);
+       	Serial.print("dim off:");
+ 		Serial.println(i);
+        changeDim(i, 0, 1);
+
+    }
+    */
+
+
 }
 
 void testAll(){
-
+/*
     // Test relays
     for(int i=0 ; i<sizeof(rels) ; i++){
         digitalWrite(rels[i],HIGH);
@@ -204,13 +258,13 @@ void testAll(){
 
     // Test dimmers
 	for(int i = 0; i < sizeof(dimmers) / sizeof(Dimmer); i++) {
-		dimmers[i].set(100);
+	//	dimmers[i].set(100);
 	}
 	delay(1500);
 
 	for(int i = 0; i < sizeof(dimmers) / sizeof(Dimmer); i++) {
-		dimmers[i].set(0);
+	//	dimmers[i].set(0);
 	}
 	delay(1500);
-  
+  */
 } // testAll
