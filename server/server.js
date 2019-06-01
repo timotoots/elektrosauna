@@ -83,9 +83,10 @@ function updateDeviceMapping(){
 	  .pipe(csv())
 	  .on('data', (data) => new_mapping.push(data))
 	  .on('end', () => {
-	    console.log('CSV file successfully processed');
+	    console.log('Device mapping CSV file successfully processed');
 	    for(var key in new_mapping){
 	    	new_mapping[key].uid = new_mapping[key].id + "_" + new_mapping[key].side + "_" + new_mapping[key].panel;
+	    	new_mapping[key].uid = new_mapping[key].id;
 	    	new_mapping[key].min = parseInt(new_mapping[key].min);
 	    	new_mapping[key].max = parseInt(new_mapping[key].max);
 
@@ -102,8 +103,43 @@ function updateDeviceMapping(){
 
 }
 
- updateDeviceMapping();
 
+/////////////////////////////////////
+
+var composition;
+
+var newComp;
+
+function updateComp(){
+
+	newComp = [];
+
+	fs.createReadStream('composition.csv')  
+	  .pipe(csv())
+	  .on('data', (data) => newComp.push(data))
+	  .on('end', () => {
+	    console.log('Composition CSV file successfully processed');
+	    for(var key in newComp){
+
+	    	// new_mapping[key].uid = new_mapping[key].id + "_" + new_mapping[key].side + "_" + new_mapping[key].panel;
+	    	// new_mapping[key].min = parseInt(new_mapping[key].min);
+	    	// new_mapping[key].max = parseInt(new_mapping[key].max);
+
+	    	// new_mapping2[new_mapping[key].uid] = new_mapping[key];
+	    	// if(new_mapping[key].interface=="dmx" && new_mapping[key].dmx_id > 0){
+	    	// 	pins_used.dmx[new_mapping[key].dmx_id] = true;
+	    	// }
+
+	    }
+	    composition = newComp;
+	    // console.log(mapping);
+	  });
+
+
+}
+
+ updateDeviceMapping();
+updateComp();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Serial
@@ -122,7 +158,7 @@ try{
 }
 
 serialport.on('open', function(){
-  console.log('Serial Port Opened');
+  console.log('Serial port opened'.green);
   // writeToSerial();
 
  
@@ -132,9 +168,9 @@ serialport.on('open', function(){
 const parser = new Readline({delimiter: '\n'});
 serialport.pipe(parser);
 
-console.log('parser setup');
-
-
+console.log('///////////////////////////////////////////////'.blue);
+console.log('ELEKTROSAUNA START'.blue);
+console.log('///////////////////////////////////////////////\n'.blue);
 
 //////////////////////////////////
 
@@ -143,12 +179,13 @@ console.log('parser setup');
    // DEBUG
 
     if(trim(data)=="READY"){
-    	console.log("Serial port Ready");
+    	console.log("Serial port READY".green);
+    	setTimeout(silence, 5000);
     	// writeToSerial();
     	
 
     } else {
-    	console.log('data received:', data);
+    	// console.log('data received:', data);
 
     }
 
@@ -240,7 +277,7 @@ function changeRel(values){
 	cmd = cmd + "\n";
 	if(lastRelCmd!=cmd){
 		serialport.write(cmd);
-		console.log(cmd.green);
+		// console.log(cmd.green);
 		lastRelCmd = cmd;
 	} 
 	
@@ -266,7 +303,7 @@ function checkAndsendDMX(){
 		const exec = require('child_process').exec;
 		console.log(activeDmxCmd);
 		exec(activeDmxCmd,{maxBuffer:200*1024*1000},function(error,stdout,stderr){ 
-			// console.log(stdout.blue);
+			//console.log(stdout.blue);
 			lastDmxCmd = activeDmxCmd;
 			statusDmx = 0;
 			checkAndsendDMX();
@@ -312,7 +349,7 @@ function checkAndChangeDims(){
 	for (var i = 0; i < activeDims.length; i++) {
 		if(activeDims[i]!=lastDims[i]){
 			var cmd = '2 ' + i + ' ' + activeDims[i] + " " + pins_state.dim_time[i] + '\n';
-			console.log("To DIM: " + cmd);
+			// console.log("To DIM: " + cmd);
 			serialport.write(cmd);
 			lastDims[i] = activeDims[i];
 			changed = 1;
@@ -327,6 +364,102 @@ function checkAndChangeDims(){
 }
 
 checkAndChangeDims();
+
+/////////////////////////////////////////////////
+
+
+
+function changeDevice(key, value, time){
+
+
+	if(mapping[key]){
+
+		var time_str = Math.round(time/1000);
+
+
+		if(value==0){
+			var dbg = time_str + "s / "+key+" : OFF";
+			console.log(dbg.red);
+		} else if(value==1 || value==100){
+
+			var dbg = time_str + "s / "+key+" : FULL";
+			console.log(dbg.green);
+
+		} else {
+				var dbg = time_str + "s / "+key+ ": " +value + "%";
+			console.log(dbg.green);
+
+		}
+		
+
+
+		//////////////////////////////////////////
+
+		if(mapping[key].interface=="dmx"){
+
+			if(typeof pins_state.dmx[mapping[key].dmx_id] !== "undefined"){
+				
+				if(value==0){
+					pins_state.dmx[mapping[key].dmx_id] = 0;
+				} else {
+
+					if(mapping[key].max){
+						value = mapValues(value,0, 100, mapping[key].min, mapping[key].max);
+					}
+					// percent to dmx
+					pins_state.dmx[mapping[key].dmx_id] = mapValues(value,0, 100, 0, 255);
+				}
+
+				changeDmx(pins_state.dmx);
+
+
+			} else {
+				console.log("wrong pin");
+			}
+
+		//////////////////////////////////////////
+
+
+		} else if(mapping[key].interface=="rel"){
+
+			if(typeof pins_state.rel[mapping[key].rel_id] !== "undefined"){
+				if(value==100 || value==1){
+					pins_state.rel[mapping[key].rel_id] = 1;
+				} else {
+					pins_state.rel[mapping[key].rel_id] = 0;
+				}
+					changeRel(pins_state.rel);
+
+
+			}
+
+
+		//////////////////////////////////////////
+
+		} else if(mapping[key].interface=="dim"){
+
+			if(typeof pins_state.dim[mapping[key].dim_id] !== "undefined"){
+				
+				if(value==0){
+					pins_state.dim[mapping[key].dim_id] = 0;
+				} else {
+					if(mapping[key].max){
+						pins_state.dim[mapping[key].dim_id] = mapValues(value,0, 100, mapping[key].min, mapping[key].max);
+					}
+				}
+
+				
+			}
+
+		}
+
+	} else {
+		console.log("wrong mapping in changeDevice("+key+", "+value+")".red);
+
+	}
+
+
+} // function changeDevice
 
 /////////////////////////////////////////////////
 
@@ -393,16 +526,239 @@ function changeAllPins(state){
 
 }
 
-//////////////////////////////////
-/*
-function writeToSerial(){
+////////////////////////////////////////////
 
-	for (var i = 0; i < 16; i++) {
-		serialport.write('2 '+ i +' 100\n');
-	}
+// GPIO
+
+var buttonStates = [];
+
+var mainState = "not_active";
+
+var gpio = require('rpi-gpio');
+
+gpio.setup(10, gpio.DIR_IN);
+
+var listenButton = true;
+
+
+setInterval(function(){
+
+	gpio.read(10,function(channel, value){
+		// console.log('Channel ' + channel + ' value is now ' + value);
+		if(value==true){
+			buttonStates.push(0);
+		} else {
+			buttonStates.push(1);
+		}
+		if(buttonStates.length > 5){
+			buttonStates.shift();
+		}
+		
+
+		// console.log(buttonStates);
+
+		var sum = 0;
+		for( var i = 0; i < buttonStates.length; i++ ){
+    		sum += parseInt( buttonStates[i], 10 ); //don't forget to add the base
+		}
+		var avg = sum/buttonStates.length;
+		// console.log("Average: " + avg);
+
+		if(avg<0.5 && (mainState=="active" || mainState=="ended") && listenButton==true){
+			stopComp("not_active");
+			listenButton = false;
+			setTimeout(function(){ listenButton = true; },2000);
+		} else if(avg>0.3 && mainState=="not_active" && listenButton == true){
+			startComp();
+			mainState = "active";
+			listenButton = false;
+			setTimeout(function(){ listenButton = true; },2000);
+		} 
 
 	
+
+		
+	});
+
+},1000);
+
+////////////////////////////////////////////
+
+var thankYouPlayed = false;
+
+function playThanks(){
+
+	if(thankYouPlayed == false){
+
+		setTimeout(function(){
+
+		var cmd = "mpg123 /opt/elektrosauna/sound/thankyou.mp3";
+
+		const exec = require('child_process').exec;
+		// console.log(activeDmxCmd);
+		exec(cmd,{maxBuffer:200*1024*1000},function(error,stdout,stderr){ 
+			// console.log(stdout.blue);
+		});
+
+		},5000);
+		
+		thankYouPlayed = true;
+
+	}
+
 }
 
-*/
+
+////////////////////////////////////////////
+
+var compTimeouts = [];
+
+function startComp(){
+
+	console.log("Start Composition!");
+
+	thankYouPlayed = false;
+
+	setTimeout(function(){
+
+		var cmd = "mpg123 /opt/elektrosauna/sound/welcome.mp3";
+
+		const exec = require('child_process').exec;
+		// console.log(activeDmxCmd);
+		exec(cmd,{maxBuffer:200*1024*1000},function(error,stdout,stderr){ 
+			// console.log(stdout.blue);
+		});
+
+	},2500);
+
+	setTimeout(function(){
+
+		var cmd = "mpg123 /opt/elektrosauna/sound/pleaseclose.mp3";
+
+		const exec = require('child_process').exec;
+		// console.log(activeDmxCmd);
+		exec(cmd,{maxBuffer:200*1024*1000},function(error,stdout,stderr){ 
+			// console.log(stdout.blue);
+		});
+
+	},6500);
+
+
+	setTimeout(function(){
+
+		var cmd = "mpg123 /opt/elektrosauna/sound/sitdown.mp3";
+
+		const exec = require('child_process').exec;
+		// console.log(activeDmxCmd);
+		exec(cmd,{maxBuffer:200*1024*1000},function(error,stdout,stderr){ 
+			// console.log(stdout.blue);
+		});
+
+	},10500);
+
+	
+	var addToTime = 0;
+	var lastTime = 0;
+	
+	for (var i = 0; i < composition.length; i++) {
+
+
+		if(composition[i].time != "" || composition[i].on=="zero"){
+
+
+			if(composition[i].on=="zero"){
+				// console.log(lastTime);
+				addToTime = lastTime;
+			} else {
+
+				 composition[i].time = parseInt(composition[i].time);
+
+
+				// console.log(composition[i]);
+
+				var timePass = composition[i].time*1000 + addToTime;
+
+				if(composition[i].on!="" && mapping[composition[i].on]){
+
+					if(composition[i].power){
+						var power = parseInt(composition[i].power);
+					} else {
+						var power = 100;
+					}
+					compTimeouts[i] = setTimeout(changeDevice.bind(null,composition[i].on,power,timePass),timePass);
+					lastTime = timePass;
+				} else if(composition[i].off!="" && mapping[composition[i].off]){
+					compTimeouts[i] = setTimeout(changeDevice.bind(null,composition[i].off,0,timePass),timePass);
+					lastTime = timePass;
+					// compTimeouts[i] = setTimeout(cmd,composition[i].time*1000);
+				} else if(composition[i].off=="silence"){
+					compTimeouts[i] = setTimeout(silence,timePass);
+					lastTime = timePass;
+				} else if(composition[i].off=="end"){
+					// var cmd = "stopComp()";
+					compTimeouts[i] = setTimeout(stopComp.bind(null, "ended"),timePass);
+					lastTime = timePass;
+
+				}
+
+			}// if
+
+
+		}
+
+	} // for
+
+
+
+
+} // function startComp
+
+//////////////////////////////////
+
+function silence(){
+		
+		console.log("Silence!");
+
+		for (var i = 0; i < pins_state.dim.length; i++) {
+			pins_state.dim[i] = 0;
+		}
+
+		for (var i = 0; i < pins_state.rel.length; i++) {
+			pins_state.rel[i] = 0;
+		}
+
+		for (var i = 0; i < pins_state.dmx.length; i++) {
+			pins_state.dmx[i] = 0;
+		}
+
+		changeDmx(pins_state.dmx);
+		changeRel(pins_state.rel);
+
+
+}
+
+//////////////////////////////////
+
+function stopComp(endState = "ended"){
+
+	console.log("Stop composition:" + endState);
+
+	playThanks();
+
+	for (var i = 0; i < composition.length; i++) {
+		clearTimeout(compTimeouts[i]);
+	}
+
+	silence();
+	
+	setTimeout(silence,1000);
+
+	mainState = endState;
+
+} 
+
+//////////////////////////////////
+// on start, do silence
+
+
 //////////////////////////////////
