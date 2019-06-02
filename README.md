@@ -59,8 +59,20 @@ sudo cp uDMX /usr/local/bin/
 
 ## Run the server
 ```
-node /opt/elektrosauna/server/server.js
+cd /opt/elektrosauna/server && node server.js
 ```
 
 ## Go to admin console
 http://elektrosauna.local:3000
+
+## Add to rc.local
+```
+su pi -c  '/opt/elektrosauna/startup.sh  &'
+```
+
+## Add to crontab
+```
+sudo crontab -e
+0 4   *   *   *    /sbin/shutdown -r +5
+```
+

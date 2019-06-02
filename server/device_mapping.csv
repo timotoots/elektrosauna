@@ -13,7 +13,7 @@ notes,id,side,panel,interface,dim_id,rel_id,dmx_id,min,max,
 ,tupsud,front,top,katki,,,,,,
 ,led_vasak,front,middle,dmx,,,6,0,6,light
 ,vortexled,front,middle,dmx,,,28,3,35,light
-12v 1a,raadiolamp,front,middle,dmx,,,3,0,100,light
+12v 1a,raadiolamp,front,middle,katki,,,3,0,100,light
 ,vortex,front,middle,rel,,18,,,,
 ,aktiiv_vasak,front,bottom,start,,,,,,
 ,aktiiv_parem,front,bottom,start,,,,,,
@@ -23,7 +23,7 @@ notes,id,side,panel,interface,dim_id,rel_id,dmx_id,min,max,
 ,3cd_mootor,right,top,dmx,,,21,16,26,motor
 ,3cd_uksed,right,top,not used,,,,,,
 230v,sangright,right,top,rel,,12,,,,sound
-,joulud,right,top,dim,7,,,0,100,light
+,joulud,right,top,not needed,7,,,0,100,light
 ,alarmclockright,right,top,rel,,13,,,,light
 ,foonright,right,middle,dmx,,,30,25,50,air
 ,uksekellright,right,middle,dmx,,,24,0,30,sound
@@ -32,7 +32,7 @@ notes,id,side,panel,interface,dim_id,rel_id,dmx_id,min,max,
 ,mangutrell,right,middle,dmx,,,22,25,28,motor
 ,musakeskus,right,middle,start,,,,,,
 ,musakeskus_button,right,middle,rel,,20,,,,
-,manguvasar,right,middle,dmx,,,25,25,35,motor
+,manguvasar,right,middle,katki,,,25,25,35,motor
 ,taskulamprightmiddle,right,middle,dmx,,,x,0,30,
 6ohm,kolar6,right,middle,amp,,,,,,
 ,skoda,right,middle,not used,,,,,,
@@ -47,7 +47,7 @@ DVI,lcd,left,top,start,,,,,,
 12v,olympus,left,top,rel,,6,,,,
 230v,sangleft,left,top,rel,,5,,,,
 ,fax,left,middle,start,,,,,,
-,mommilamp,left,middle,rel,,10,,,,
+,mommilamp,left,middle,katki,,10,,,,
 ,uksekellimpuse,left,middle,rel,,1,,,,
 ,kausslamp,left,middle,dim,1,,,0,100,light
 ,aktiiv,left,middle,start,,,,,,
@@ -74,7 +74,7 @@ katki,sang_broken,back,middle,katki,,,,,,
 ,trell,back,bottom,rel,,21,,0,30,motor
 ,foonbaclbottom,back,bottom,dmx,,,13,19,40,air
 ,synt,back,bottom,katki,,,,,,
-,taskulampbackbottom,back,bottom,dmx,,,14,0,30,light
+,taskulampbackbottom,back,bottom,katki,,,14,0,30,light
 ,massaz,back,bottom,dim,8,,,0,100,motor
 ,printer,back,bottom,start,,,,,,
 VGA,lcd,back,bottom,start,,,,,,

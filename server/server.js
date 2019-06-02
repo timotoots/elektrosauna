@@ -4,10 +4,15 @@
 
 'use strict';
 
+var colors = require('colors');
+
+console.log('///////////////////////////////////////////////'.blue);
+console.log('ELEKTROSAUNA START'.blue);
+console.log('///////////////////////////////////////////////\n'.blue);
+
 const spawn = require( 'child_process' );
 
 var fs = require('fs');
-var colors = require('colors');
 
 var request = require('request');
 
@@ -168,9 +173,50 @@ serialport.on('open', function(){
 const parser = new Readline({delimiter: '\n'});
 serialport.pipe(parser);
 
-console.log('///////////////////////////////////////////////'.blue);
-console.log('ELEKTROSAUNA START'.blue);
-console.log('///////////////////////////////////////////////\n'.blue);
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function checkSerialPort(){
+
+	const exec = require('child_process').exec;
+	exec("ls /dev/ttyUSB0",{maxBuffer:200*1024*1000},function(error,stdout,stderr){ 
+		setTimeout(checkSerialPort,5000);
+		
+		if(trim(stdout)=="/dev/ttyUSB0"){
+			// console.log("USB device alive".green);
+		} else {
+			console.log("Arduino device not connected! Please call Timo!".red);
+		}
+
+	});
+
+
+}
+
+checkSerialPort();
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function checkUsbDmx(){
+
+	const exec = require('child_process').exec;
+	exec("lsusb",{maxBuffer:200*1024*1000},function(error,stdout,stderr){ 
+		setTimeout(checkUsbDmx,5000);
+				// console.log(stdout.blue);
+
+		if(stdout.search("16c0:05dc")!=-1){
+			// console.log("DMX USB device alive".green);
+		} else {
+			console.log("DMX USB device not connected! Please call Timo!".red);
+		}
+
+	});
+
+
+}
+
+checkUsbDmx();
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////
 
@@ -301,7 +347,7 @@ function checkAndsendDMX(){
 		activeDmxCmd = currentDmxCmd;
 		statusDmx = 1;
 		const exec = require('child_process').exec;
-		console.log(activeDmxCmd);
+		// console.log(activeDmxCmd);
 		exec(activeDmxCmd,{maxBuffer:200*1024*1000},function(error,stdout,stderr){ 
 			//console.log(stdout.blue);
 			lastDmxCmd = activeDmxCmd;
@@ -379,7 +425,7 @@ function changeDevice(key, value, time){
 
 		if(value==0){
 			var dbg = time_str + "s / "+key+" : OFF";
-			console.log(dbg.red);
+			console.log(dbg.blue);
 		} else if(value==1 || value==100){
 
 			var dbg = time_str + "s / "+key+" : FULL";
