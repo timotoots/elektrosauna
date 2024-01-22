@@ -482,6 +482,13 @@ function changeDevice(key, value, time){
 
 		//////////////////////////////////////////
 
+		} else if(mapping[key].interface=="sound"){
+
+			playSound(key);
+
+
+		//////////////////////////////////////////
+
 		} else if(mapping[key].interface=="dim"){
 
 			if(typeof pins_state.dim[mapping[key].dim_id] !== "undefined"){
@@ -654,6 +661,36 @@ function playThanks(){
 
 }
 
+////////////////////////////////////////////
+
+function playSound(sound){
+
+
+
+		var cmd = "mpg123 --loop -1 /opt/elektrosauna/sound/"+sound+".mp3";
+
+		// console.log(cmd);
+
+		const exec = require('child_process').exec;
+		// console.log(activeDmxCmd);
+		exec(cmd,{maxBuffer:200*1024*1000},function(error,stdout,stderr){ 
+			// console.log(stdout.blue);
+		});
+
+	
+
+}
+
+function stopAllSounds(){
+
+		var cmd = "killall mpg123";
+
+		const exec = require('child_process').exec;
+		// console.log(activeDmxCmd);
+		exec(cmd,{maxBuffer:200*1024*1000},function(error,stdout,stderr){ 
+			// console.log(stdout.blue);
+		});
+}
 
 ////////////////////////////////////////////
 
@@ -664,6 +701,8 @@ function startComp(){
 	console.log("Start Composition!");
 
 	thankYouPlayed = false;
+
+	//playSoundtrack();
 
 	setTimeout(function(){
 
@@ -765,6 +804,8 @@ function silence(){
 		
 		console.log("Silence!");
 
+
+
 		for (var i = 0; i < pins_state.dim.length; i++) {
 			pins_state.dim[i] = 0;
 		}
@@ -788,6 +829,8 @@ function silence(){
 function stopComp(endState = "ended"){
 
 	console.log("Stop composition:" + endState);
+
+	stopAllSounds();
 
 	playThanks();
 

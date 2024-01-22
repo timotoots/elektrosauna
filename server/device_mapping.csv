@@ -1,12 +1,12 @@
 notes,id,side,panel,interface,dim_id,rel_id,dmx_id,min,max,
 ,start,all,all,rel,,16,,,,
-230v,monomikser,front,top,dim,9,,,0,100,motor
-,manguauto,front,top,katki,,,,,,
+230v,monomikser,front,top,dim,6,,,0,100,motor
+,manguauto,front,top,sound,,,,,,
 230v,infrared,front,top,dim,5,,,0,100,light
 ,part,front,top,katki,,,,,,
 ,tainamikser,front,top,katki,,,,,,
-500w 2.17a,tolmuimejafrontleft,front,top,rel,,19,,,,
-30vac,telefon,front,top,not used,,,,,,
+500w 2.17a,tolmuimejafrontleft,front,top,,,,,,,
+30vac,vanatelefon,front,top,sound,,,,,,
 12v,firealarm,front,top,dmx,,,10,60,100,sound
 12v,exit,front,top,dmx,,,8,0,100,light
 ,minisang,front,top,not used,,,,,,
@@ -17,7 +17,7 @@ notes,id,side,panel,interface,dim_id,rel_id,dmx_id,min,max,
 ,vortex,front,middle,rel,,18,,,,
 ,aktiiv_vasak,front,bottom,start,,,,,,
 ,aktiiv_parem,front,bottom,start,,,,,,
-,telefon,right,top,not used,,,,,,
+,uustelefon,right,top,sound,,,,,,
 "230v, VGA",lcd,right,top,start,,,,,,
 12v,kyyned,right,top,dmx,,,29,0,100,light
 ,3cd_mootor,right,top,dmx,,,21,16,26,motor
@@ -54,7 +54,7 @@ DVI,lcd,left,top,start,,,,,,
 12v 0.7a,robottolm,left,middle,dmx,,,5,47,100,motor
 ,aktiiv,left,bottom,start,,,,,,
 ,taskulampleft,left,bottom,dmx,,,1,0,30,light
-40w 230v,suur_vent,left,bottom,dim,2,,,0,100,air
+40w 230v,suur_vent,left,bottom,sound,4,,,0,100,air
 ,grunding,back,top,rel,,,,,,
 12v,grunding_seat,back,top,rel,,23,,,,light
 ,aktiiv,back,top,start,,,,,,
@@ -67,13 +67,13 @@ DVI,lcd,left,top,start,,,,,,
 ,lavasangad,back,middle,rel,,9,,,,
 katki,sang_broken,back,middle,katki,,,,,,
 ,sireen,back,middle,dmx,,,12,0,30,sound
-230v,mikser,back,middle,katki,,,,,,
+230v,mikser,back,middle,sound,,,,,,
 ,automakk,back,bottom,rel,,22,,,,light
 ,uksekellback,back,bottom,rel,,0,,,,sound
 ,sangbackbottom,back,bottom,rel,,4,,,,sound
 ,trell,back,bottom,rel,,21,,0,30,motor
 ,foonbaclbottom,back,bottom,dmx,,,13,19,40,air
-,synt,back,bottom,katki,,,,,,
+,synt,back,bottom,sound,,,,,,
 ,taskulampbackbottom,back,bottom,katki,,,14,0,30,light
 ,massaz,back,bottom,dim,8,,,0,100,motor
 ,printer,back,bottom,start,,,,,,
@@ -86,7 +86,6 @@ VGA,lcd,back,bottom,start,,,,,,
 ,Reflect-notused,top,right,not used,,,,0,100,
 12v,halogen,top,left,dmx,,,16,0,100,
 ,sangad_philips,top,left,rel,,14,,,,sound
-,synt,top,left,katki,,,,,,
 ,reflects,top,left,dim,3,,,0,100,light
 ,,,,,,,,,,
 ,,,,,,,,,,
